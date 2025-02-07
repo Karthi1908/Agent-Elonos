@@ -150,7 +150,7 @@ async function initializeAgent() {
  * @param interval - Time interval between actions in seconds
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function runAutonomousMode(agent: any, config: any, interval = 100) {
+async function runAutonomousMode(agent: any, config: any, interval = 1000) {
   console.log("Starting autonomous mode...");
 
   // eslint-disable-next-line no-constant-condition
