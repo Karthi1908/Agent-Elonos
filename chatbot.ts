@@ -1,3 +1,5 @@
+import { AgentKit, twitterActionProvider } from "@coinbase/agentkit";
+import { getLangChainTools } from "@coinbase/agentkit-langchain";
 import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 import { CdpToolkit } from "@coinbase/cdp-langchain";
 import { HumanMessage } from "@langchain/core/messages";
@@ -97,6 +99,14 @@ async function initializeAgent() {
 
     // Initialize CDP AgentKit Toolkit and get tools
     const cdpToolkit = new CdpToolkit(agentkit);
+
+    const agentkit = await AgentKit.from({
+      cdpApiKeyName: process.env.CDP_API_KEY_NAME,
+      cdpApiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+      actionProviders: [twitterActionProvider()],
+    });
+  
+    const tools = await getLangChainTools(agentkit);
     const tools = cdpToolkit.getTools();
     
 
