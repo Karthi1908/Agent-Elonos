@@ -100,14 +100,16 @@ async function initializeAgent() {
     // Initialize CDP AgentKit Toolkit and get tools
     const cdpToolkit = new CdpToolkit(agentkit);
 
-    const agentkit = await AgentKit.from({
+    const agentkit_langchain = await AgentKit.from({
       cdpApiKeyName: process.env.CDP_API_KEY_NAME,
       cdpApiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(/\\n/g, "\n"),
       actionProviders: [twitterActionProvider()],
     });
   
-    const tools = await getLangChainTools(agentkit);
-    const tools = cdpToolkit.getTools();
+    const tools_langchain = await getLangChainTools(agentkit_langchain);
+    const tools_cdp = cdpToolkit.getTools();
+
+    const tools = [...tools_langchain, ...tools_cdp];
     
 
     // Store buffered conversation history in memory
@@ -120,15 +122,12 @@ async function initializeAgent() {
       tools,
       checkpointSaver: memory,
       messageModifier: `
-        You are a helpful agent that can interact onchain using the Coinbase Developer Platform AgentKit. You are 
-        empowered to interact onchain using your tools. If you ever need funds, you can request them from the 
+        You are a helpful agent that can interact onchain using the Coinbase Developer Platform AgentKit and a helpful agent that can interact with the Twitter (X) API using the Coinbase Developer Platform Twitter (X) Agentkit.
+        You are empowered to interact onchain using your tools and publish the activity to X. If you ever need funds, you can request them from the 
         faucet if you are on network ID 'base-sepolia'. If not, you can provide your wallet details and request 
         funds from the user. Before executing your first action, get the wallet details to see what network 
-        you're on. If there is a 5XX (internal) HTTP error code, ask the user to try again later. If someone 
-        asks you to do something you can't do with your currently available tools, you must say so, and 
-        encourage them to implement it themselves using the CDP SDK + Agentkit, recommend they go to 
-        docs.cdp.coinbase.com for more information. Be concise and helpful with your responses. Refrain from 
-        restating your tools' descriptions unless it is explicitly requested.
+        you're on. Be concise and helpful with your responses. Every onchain activity you tweet.
+        Your tweets should be concise and informative on the onchain activities you performed. ALways post the transaction reference to tweet.
         `,
     });
 
@@ -158,7 +157,7 @@ async function runAutonomousMode(agent: any, config: any, interval = 100) {
   while (true) {
     try {
       const thought =
-        "Be creative and do something interesting on the blockchain. " +
+        "Be creative and do something interesting on the blockchain. " + " Keep publishing on Crypto stuff on X "
         "Choose an action or set of actions and execute it that highlights your abilities.";
 
       const stream = await agent.stream({ messages: [new HumanMessage(thought)] }, config);
