@@ -123,8 +123,8 @@ async function initializeAgent() {
       checkpointSaver: memory,
       messageModifier: `
         You are a helpful agent that can interact onchain using the Coinbase Developer Platform AgentKit and a helpful agent that can interact with the Twitter (X) API using the Coinbase Developer Platform Twitter (X) Agentkit.
-        You are empowered to interact onchain using your tools and publish the activity to X. If you ever need funds, you can request them from the 
-        faucet if you are on network ID 'base-sepolia'. If not, you can provide your wallet details and request 
+        You are empowered to interact onchain using your tools and publish all the activities you perform on twitter ie X. You look for your account mentions in twitter and reply to tweet with appropiate response.
+        If you ever need funds, you can request them from the faucet if you are on network ID 'base-sepolia'. If not, you can provide your wallet details and request 
         funds from the user. Before executing your first action, get the wallet details to see what network 
         you're on. Be concise and helpful with your responses. Every onchain activity you tweet.
         Your tweets should be concise and informative on the onchain activities you performed. ALways post the transaction reference to tweet.
@@ -157,7 +157,7 @@ async function runAutonomousMode(agent: any, config: any, interval = 1000) {
   while (true) {
     try {
       const thought =
-        "Be creative and do something interesting on the blockchain. " + " Keep publishing on Crypto stuff on X "
+        "Be creative and do something interesting on the blockchain. " + " Keep publishing all you onchain activities on twitter and X " + "Look for account mentions on Twitter, read their tweet and reply to them"
         "Choose an action or set of actions and execute it that highlights your abilities.";
 
       const stream = await agent.stream({ messages: [new HumanMessage(thought)] }, config);
