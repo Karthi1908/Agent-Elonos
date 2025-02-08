@@ -13,6 +13,9 @@
     "format-check": "prettier -c .prettierrc --check \"**/*.{ts,js,cjs,json,md}\""
   },
   "dependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
+    "@aws-sdk/credential-provider-node": "^3.744.0",
+    "@aws-sdk/types": "^3.734.0",
     "@coinbase/agentkit": "^0.1.1",
     "@coinbase/agentkit-langchain": "^0.1.0",
     "@coinbase/cdp-agentkit-core": "^0.0.14",

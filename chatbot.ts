@@ -7,6 +7,7 @@ import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { BedrockChat } from "@langchain/community/chat_models/bedrock";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as readline from "readline";
@@ -77,8 +78,17 @@ async function initializeAgent() {
       maxOutputTokens: 2048,
       json:true,
     });*/
-     const llm = new ChatOpenAI({ model: "gpt-3.5-turbo-0125"      
-     });
+    // const llm = new ChatOpenAI({ model: "gpt-3.5-turbo-0125"      
+    // });
+
+     const llm = new BedrockChat({
+      model: "anthropic.claude-3-sonnet-20240229-v1:0",
+      region: process.env.BEDROCK_AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
+      },
+    });
      
 
     let walletDataStr: string | null = null;
@@ -128,14 +138,14 @@ async function initializeAgent() {
       tools,
       checkpointSaver: memory,
       messageModifier: `
-        You are a helpful agent that can interact onchain using the Coinbase Developer Platform AgentKit and can interact with the Twitter (X) API using the Coinbase Developer Platform Twitter (X) Agentkit.
-        You are empowered to interact onchain using your tools and then post sucessful completion publish all the activities you perform on discord and if possible on Twitter ie X post performing the onchain activity. 
+        You are a helpful agent that can interact onchain on user requests from Discord get messages using langchain tools and can interact with the Twitter (X) API Agentkit.
+        You are empowered to interact onchain using your coinbase Agentkit tools and then post sucessful completion publish all the activities you perform on discord and if possible on Twitter ie X post performing the onchain activity. 
         If you ever need funds, you can request them from the faucet if you are on network ID 'base-sepolia'. 
         If not, you can provide your wallet details and request funds from the user. 
         Before executing your first action, get the wallet details to see what network and publish the details to discord
         You look for your account mentions in twitter and reply to tweet with appropiate response.
-        Check for the messages in discord and Reply promptly on discord. Be concise and helpful with your responses. 
-        You send messages to discord on the onchain activity as soon as you perform.
+        Get discord messages in the Discord channel and Reply promptly on discord for any unanswered requests. Be concise and helpful with your responses. 
+        You send messages to discord on all the onchain activities as soon as you perform.
         Your tweets should be concise and informative on the onchain activities you performed. 
         ALways post the transaction reference to discord.
         `,
@@ -160,19 +170,21 @@ async function initializeAgent() {
  * @param interval - Time interval between actions in seconds
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function runAutonomousMode(agent: any, config: any, interval = 1000) {
+async function runAutonomousMode(agent: any, config: any, interval = 100) {
   console.log("Starting autonomous mode...");
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
       const thought =
-        "Be creative and do something interesting onchain on base blockchain."
-        + "Send message to discord post sucessful completion of Onchain activity" 
+        "From Discord get messages mentioning 'Agent Elonos' and provide a proper response or perform a onchain activity via agentkit send transaction reference and feedback to them via Discord send messages"
+        + "Check the tweets mentioning @TezElonos. If '@TezElonos' is mentioned in any tweet, read that tweet, reply to the tweet appropiately "
+        + "Perfrom the onchain actions only mentioned in tweets mentioning @TezElonos or mentioned in Discord channel and execute them if that highlights your abilities.";
+        + "Send message to discord post sucessful completion of Onchain activity or the error messages" 
         + "Keep publishing all you onchain activities on discord once the activity is completed" 
-        + "Be actie on discord and Respond to all queries raised in Discord"
-        + "Your twitter account is @TezElonos. If your account @TezElonos is mentioned in any tweet, read their tweet, reply to them "
-        + "Choose an action mentioned in tweets with your account mention and execute them if that highlights your abilities.";
+        + "Be active on discord and Respond to all queries raised in Discord"
+        + "Check the tweets mentioning @TezElonos. If '@TezElonos' is mentioned in any tweet, read that tweet, reply to the tweet appropiately "
+        + "Perfrom the onchain actions only mentioned in tweets mention @TezElonos and execute them if that highlights your abilities.";
 
       const stream = await agent.stream({ messages: [new HumanMessage(thought)] }, config);
 
