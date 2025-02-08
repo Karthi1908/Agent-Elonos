@@ -10,6 +10,11 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as readline from "readline";
+import {
+  DiscordGetMessagesTool,
+  DiscordChannelSearchTool,
+  DiscordSendMessagesTool
+} from "@langchain/community/tools/discord";
 
 dotenv.config();
 
@@ -108,8 +113,9 @@ async function initializeAgent() {
   
     const tools_langchain = await getLangChainTools(agentkit_langchain);
     const tools_cdp = cdpToolkit.getTools();
+    const tools_discord = [new DiscordSendMessagesTool(), new DiscordGetMessagesTool(), new DiscordChannelSearchTool()];
 
-    const tools = [...tools_langchain, ...tools_cdp];
+    const tools = [...tools_langchain, ...tools_cdp, ...tools_discord];
     
 
     // Store buffered conversation history in memory
@@ -122,11 +128,16 @@ async function initializeAgent() {
       tools,
       checkpointSaver: memory,
       messageModifier: `
-        You are a helpful agent that can interact onchain using the Coinbase Developer Platform AgentKit and a helpful agent that can interact with the Twitter (X) API using the Coinbase Developer Platform Twitter (X) Agentkit.
-        You are empowered to interact onchain using your tools and publish all the activities you perform on twitter ie X. If you ever need funds, you can request them from the faucet if you are on network ID 'base-sepolia'. If not, you can provide your wallet details and request 
-        funds from the user. Before executing your first action, get the wallet details to see what network.You look for your account mentions in twitter and reply to tweet with appropiate response.
-        you're on. Be concise and helpful with your responses. You tweet on the onchain activity as soon as you perform.
-        Your tweets should be concise and informative on the onchain activities you performed. ALways post the transaction reference to tweet.
+        You are a helpful agent that can interact onchain using the Coinbase Developer Platform AgentKit and can interact with the Twitter (X) API using the Coinbase Developer Platform Twitter (X) Agentkit.
+        You are empowered to interact onchain using your tools and then post sucessful completion publish all the activities you perform on discord and if possible on Twitter ie X post performing the onchain activity. 
+        If you ever need funds, you can request them from the faucet if you are on network ID 'base-sepolia'. 
+        If not, you can provide your wallet details and request funds from the user. 
+        Before executing your first action, get the wallet details to see what network and publish the details to discord
+        You look for your account mentions in twitter and reply to tweet with appropiate response.
+        Check for the messages in discord and Reply promptly on discord. Be concise and helpful with your responses. 
+        You send messages to discord on the onchain activity as soon as you perform.
+        Your tweets should be concise and informative on the onchain activities you performed. 
+        ALways post the transaction reference to discord.
         `,
     });
 
@@ -156,8 +167,12 @@ async function runAutonomousMode(agent: any, config: any, interval = 1000) {
   while (true) {
     try {
       const thought =
-        "Be creative and do something interesting onchain on base blockchain. " + "Keep publishing all you onchain activities on twitter and X " + "Your twitter account is @TezElonos. If your account @TezElonos mentioned is mentioned in tweet, read their tweet, reply to them "
-        "Choose an action or set of actions mentioned in tweets with your account mention and execute them that highlights your abilities.";
+        "Be creative and do something interesting onchain on base blockchain."
+        + "Send message to discord post sucessful completion of Onchain activity" 
+        + "Keep publishing all you onchain activities on discord once the activity is completed" 
+        + "Be actie on discord and Respond to all queries raised in Discord"
+        + "Your twitter account is @TezElonos. If your account @TezElonos is mentioned in any tweet, read their tweet, reply to them "
+        + "Choose an action mentioned in tweets with your account mention and execute them if that highlights your abilities.";
 
       const stream = await agent.stream({ messages: [new HumanMessage(thought)] }, config);
 

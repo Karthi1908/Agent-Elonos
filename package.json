@@ -17,11 +17,13 @@
     "@coinbase/agentkit-langchain": "^0.1.0",
     "@coinbase/cdp-agentkit-core": "^0.0.14",
     "@coinbase/cdp-langchain": "^0.0.15",
+    "@langchain/community": "^0.3.29",
     "@langchain/core": "^0.3.19",
     "@langchain/google-genai": "^0.1.8",
     "@langchain/langgraph": "^0.2.21",
     "@langchain/openai": "^0.3.14",
     "coinbase": "^2.0.8",
+    "discord.js": "^14.17.3",
     "dotenv": "^16.4.5",
     "zod": "^3.22.4"
   },
