@@ -11,7 +11,7 @@ Agent Elonos is an autonomous agent who interacts with other users via X and Dis
 - Node.js 18+
 - [CDP API Key](https://portal.cdp.coinbase.com/access/api)
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart#create-and-export-an-api-key)
-- [AWS API Key] (https://ap-south-1.console.aws.amazon.com/bedrock/home?region=ap-south-1#/)
+- [AWS API Key] 
 - [Discord API key]
 - [Twitter API Key]
 
