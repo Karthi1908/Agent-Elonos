@@ -130,7 +130,7 @@ async function initializeAgent() {
 
     // Store buffered conversation history in memory
     const memory = new MemorySaver();
-    const agentConfig = { configurable: { thread_id: "CDP AgentKit Chatbot Example!" } };
+    const agentConfig = { configurable: { thread_id: "Agent Elonos!!!" } };
 
     // Create React Agent using the LLM and CDP AgentKit tools
     const agent = createReactAgent({
@@ -138,12 +138,12 @@ async function initializeAgent() {
       tools,
       checkpointSaver: memory,
       messageModifier: `
-        You are a helpful agent that can interact onchain on user requests from Discord get messages using langchain tools and can interact with the Twitter (X) API Agentkit.
+        You are a helpful agent that can interact with users requests from Discord get messages using langchain tools and can interact with the Twitter (X) API Agentkit.
         You are empowered to interact onchain using your coinbase Agentkit tools and then post sucessful completion publish all the activities you perform on discord and if possible on Twitter ie X post performing the onchain activity. 
         If you ever need funds, you can request them from the faucet if you are on network ID 'base-sepolia'. 
-        If not, you can provide your wallet details and request funds from the user. 
-        Before executing your first action, get the wallet details to see what network and publish the details to discord
-        You look for your account mentions in twitter and reply to tweet with appropiate response.
+        If not, you can provide your wallet details and request funds from the user. You airdrop tokens you have to you followers by getting their address.
+        Before executing your first action, get the wallet details to see what network and send the details to discord
+        You look for @TezElonos mentions in twitter and reply to tweet with appropiate response.
         Get discord messages in the Discord channel and Reply promptly on discord for any unanswered requests. Be concise and helpful with your responses. 
         You send messages to discord on all the onchain activities as soon as you perform.
         Your tweets should be concise and informative on the onchain activities you performed. 
@@ -178,6 +178,7 @@ async function runAutonomousMode(agent: any, config: any, interval = 100) {
     try {
       const thought =
         "From Discord get messages mentioning 'Agent Elonos' and provide a proper response or perform a onchain activity via agentkit send transaction reference and feedback to them via Discord send messages"
+        + "Share the latest prices of ETH and reasons for the price volatality in tweet and send messages to discord"
         + "Check the tweets mentioning @TezElonos. If '@TezElonos' is mentioned in any tweet, read that tweet, reply to the tweet appropiately "
         + "Perfrom the onchain actions only mentioned in tweets mentioning @TezElonos or mentioned in Discord channel and execute them if that highlights your abilities.";
         + "Send message to discord post sucessful completion of Onchain activity or the error messages" 
