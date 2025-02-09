@@ -48,7 +48,7 @@ npm install
   - "TWITTER_BEARER_TOKEN"
   - "BEDROCK_AWS_ACCESS_KEY_ID"
   - "BEDROCK_AWS_SECRET_ACCESS_KEY"
-  - "BEDROCK_AWS_REGION="ap-south-1"
+  - "BEDROCK_AWS_REGION"
 
 ```bash
 npm start
